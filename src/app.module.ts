@@ -7,15 +7,11 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { UsersModule } from './modules/users/users.module';
 import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from './prisma/prisma.module';
 import Joi from 'joi';
 
 @Module({
   imports: [
-    AuthModule,
-    ProductsModule,
-    OrdersModule,
-    PaymentsModule,
-    UsersModule,
     ConfigModule.forRoot({
       // 1. Determine which file to load
       envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
@@ -34,6 +30,12 @@ import Joi from 'joi';
         // API_TIMEOUT: Joi.number().default(5000),
       }),
     }),
+    AuthModule,
+    ProductsModule,
+    OrdersModule,
+    PaymentsModule,
+    UsersModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
