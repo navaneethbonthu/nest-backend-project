@@ -31,6 +31,7 @@ import Joi from 'joi';
         PORT: Joi.number().default(3000),
         DATABASE_URL: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
+        // API_TIMEOUT: Joi.number().default(5000),
       }),
     }),
   ],
