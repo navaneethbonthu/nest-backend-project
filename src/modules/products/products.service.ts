@@ -1,26 +1,23 @@
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateProductDto } from "./create-product.dto";
 import { connect } from "http2";
+import { date, number } from "joi";
 
 export class ProductsService {
-    constructor(private prisma: PrismaService) { } // Inject Prisma
+    constructor(private prismaService: PrismaService) { } // Inject Prisma
 
-    // create(createProductDto: CreateProductDto) {
+    async create(dto: CreateProductDto) {
 
+        return this.prismaService.product.create({
+            data: {
+                name: dto.name,
+                price: dto.price,
+                stockQuantity: dto.stockQuantity,
+                category: {
+                    connect: { id: Number(dto.categoryId) }
+                }
+            }
+        })
 
-    //     const {categoryId , ...rest} = createProductDto
-
-
-    //     return ""
-    // }
-
-    // findAll() {
-    //     return this.prisma.product.findMany({
-    //         include: { category: true } // If you want to see the category details
-    //     });
-    // }
-
-    // findOne(id: string) {
-    //     return this.prisma.product.findUnique({ where: { id } });
-    // }
+    }
 }
