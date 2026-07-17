@@ -27,13 +27,13 @@ export class UsersService {
 
   constructor(private prisma: PrismaService) { }
 
-  async getAllUsers() {
-    return this.prisma.user.findMany({
-      include: { posts: true }, // This is the power of Prisma!
-    });
-  }
+  // async getAllUsers() {
+  //   return this.prisma.user.findMany({
+  //     include: { posts: true }, // This is the power of Prisma!
+  //   });
+  // }
 
-  async createUser(data: { name: string; email: string }) {
-    return this.prisma.user.create({ data });
-  }
+  // async createUser(data: { name: string; email: string }) {
+  //   return this.prisma.user.create({ data });
+  // }
 }

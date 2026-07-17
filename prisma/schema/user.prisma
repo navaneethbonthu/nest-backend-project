@@ -1,0 +1,17 @@
+
+
+enum Role{
+  ADMIN
+  CUSTOMER
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  password String
+  role     Role    @default(CUSTOMER)
+  orders   Order[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
