@@ -6,7 +6,6 @@ import { number } from "joi";
 export class GetFilterDto {
 
 
-
     @IsOptional()
     @IsString()
     search?: string;
@@ -27,6 +26,19 @@ export class GetFilterDto {
     @Type(() => Number) // <--- Add this
     @IsNumber()
     categoryId?: number;
+
+    @IsOptional()
+    @Type(() => Number)
+    @IsNumber()
+    @Min(1)
+    page?: number = 1
+
+
+    @IsOptional()
+    @Type(() => Number)
+    @IsNumber()
+    @Min(1)
+    limit?: number = 10
 
 
 }

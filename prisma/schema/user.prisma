@@ -2,15 +2,17 @@
 
 enum Role{
   ADMIN
-  CUSTOMER
+  USER
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  password String
-  role     Role    @default(CUSTOMER)
-  orders   Order[]
+  id              Int     @id @default(autoincrement())
+  email           String  @unique
+  password        String
+  name            String?
+  role            Role    @default(USER)
+  refreshToken    String?
+  orders          Order[]    
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

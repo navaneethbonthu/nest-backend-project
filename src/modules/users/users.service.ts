@@ -1,39 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  // create(createUserDto: CreateUserDto) {
-  //   return 'This action adds a new user';
-  // }
 
-  // findAll() {
-  //   return `This action returns all users`;
-  // }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} user`;
-  // }
+  constructor(private prismaService: PrismaService) { }
 
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
+  async create(data: any) {
+    return await this.prismaService.user.create({ data })
+  }
 
-  constructor(private prisma: PrismaService) { }
+  async findByEmail(email: string) {
+    return await this.prismaService.user.findUnique({ where: { email } })
+  }
 
-  // async getAllUsers() {
-  //   return this.prisma.user.findMany({
-  //     include: { posts: true }, // This is the power of Prisma!
-  //   });
-  // }
+  async updateRefreshToken(userId: number, token: string | null) {
+    return this.prismaService.user.update({
+      where: { id: userId },
+      data: { refreshToken: token }
+    })
+  }
 
-  // async createUser(data: { name: string; email: string }) {
-  //   return this.prisma.user.create({ data });
-  // }
+
+
+
+
+
+
 }

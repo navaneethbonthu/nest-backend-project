@@ -3,6 +3,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateProductDto } from "./dtos/create-product.dto";
 import { UpdateProductDto } from "./dtos/update-product.dto";
 import { GetFilterDto } from "./dtos/get-filter.dto";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 
@@ -30,42 +31,46 @@ export class ProductsService {
 
 
     async findAll(filterDto: GetFilterDto) {
-        const { search, minPrice, maxPrice, categoryId } = filterDto
+        const { search, minPrice, maxPrice, categoryId, limit = 10, page = 1 } = filterDto
 
-        // return await this.prismaService.product.findMany({
-        //     where: {
-        //         categoryId: categoryId ? Number(categoryId) : undefined,
-        //         price: {
-        //             gte: minPrice ? Number(minPrice) : undefined,
-        //             lte: maxPrice ? Number(maxPrice) : undefined,
-        //         },
-        //         OR: search ? [
-        //             { name: { contains: search, mode: 'insensitive' } },
-        //             { description: { contains: search, mode: 'insensitive' } },
-        //         ] : undefined,
-        //     },
-        //     include: { category: true },
-        // });
+        const skip = (page - 1) * limit
 
-        return await this.prismaService.product.findMany({
-            where: {
-                categoryId: categoryId, // No Number() needed anymore
-                price: {
-                    gte: minPrice,     // No Number() needed anymore
-                    lte: maxPrice,     // No Number() needed anymore
-                },
-                OR: search ? [
-                    { name: { contains: search, mode: 'insensitive' } },
-                    { description: { contains: search, mode: 'insensitive' } },
-                ] : undefined,
+        const where: Prisma.ProductWhereInput = {
+            categoryId: categoryId, // No Number() needed anymore
+            price: {
+                gte: minPrice,     // No Number() needed anymore
+                lte: maxPrice,     // No Number() needed anymore
             },
-            include: { category: true },
-        });
+            OR: search ? [
+                { name: { contains: search, mode: 'insensitive' } },
+                { description: { contains: search, mode: 'insensitive' } },
+            ] : undefined,
+        }
+
+        const [items, total] = await Promise.all([
+            this.prismaService.product.findMany({
+                where,
+                include: { category: true },
+                skip: skip,
+                take: limit,
+                orderBy: { createdAt: 'desc' }
+            }),
+            this.prismaService.product.count({
+                where
+            })
+
+        ])
+
+
+        return {
+            data: items,
+            meta: { total, page, lastPage: Math.ceil(total / limit) }
+        }
     }
 
 
     async findOne(id: string) {
-        const product = this.prismaService.product.findUnique({
+        const product = await this.prismaService.product.findUnique({
             where: { id: Number(id) },
             include: {
                 category: true
@@ -73,7 +78,7 @@ export class ProductsService {
         })
 
         if (!product) {
-            throw new NotFoundException('Product with ID ${id} not found')
+            throw new NotFoundException(`Product with ID ${id} not found`)
         }
 
         return product;
