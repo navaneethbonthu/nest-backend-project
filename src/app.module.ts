@@ -9,6 +9,7 @@ import { UsersModule } from './modules/users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import Joi from 'joi';
+import { CONFIG_KEYS } from './common/constants/config.constants';
 
 @Module({
   imports: [
@@ -21,13 +22,11 @@ import Joi from 'joi';
 
       // 3. Validate your environment variables (Highly Recommended)
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string()
-          .valid('development', 'production', 'test', 'staging')
-          .default('development'),
-        PORT: Joi.number().default(3000),
-        DATABASE_URL: Joi.string().required(),
-        JWT_SECRET: Joi.string().required(),
-        // API_TIMEOUT: Joi.number().default(5000),
+        [CONFIG_KEYS.NODE_ENV]: Joi.string().valid('development', 'production', 'test', 'staging').default('development'),
+        [CONFIG_KEYS.PORT]: Joi.number().default(3000),
+        [CONFIG_KEYS.DATABASE_URL]: Joi.string().required(),
+        [CONFIG_KEYS.JWT_SECRET]: Joi.string().required(),
+        [CONFIG_KEYS.JWT_EXPIRES_IN]: Joi.string().default('15m'),
       }),
     }),
     AuthModule,

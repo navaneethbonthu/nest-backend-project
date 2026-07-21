@@ -3,22 +3,23 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { log } from 'console';
-import { SigninDto } from './dtos/signinDto';
+import { SignupDto } from './dtos/signup.dto';
+import { LoginDto } from './dtos/login.dot';
 
 @Injectable()
 export class AuthService {
     constructor(private userService: UsersService, private jwtService: JwtService) { }
 
 
-    async signIn(signInDto: SigninDto) {
-        const userExists = await this.userService.findByEmail(signInDto.email)
+    async signIn(signupDto: SignupDto) {
+        const userExists = await this.userService.findByEmail(signupDto.email)
         if (userExists) {
             throw new BadRequestException('User already exists')
         }
-        const hashedPassword = await bcrypt.hash(signInDto.password, 10)
+        const hashedPassword = await bcrypt.hash(signupDto.password, 10)
 
         const user = await this.userService.create({
-            ...signInDto,
+            ...signupDto,
             password: hashedPassword
         })
 
@@ -27,7 +28,7 @@ export class AuthService {
     }
 
 
-    async login(logInDto: any) {
+    async login(logInDto: LoginDto) {
 
         const { email, password } = logInDto
 

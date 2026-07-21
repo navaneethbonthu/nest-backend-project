@@ -1,0 +1,9 @@
+
+
+export const CONFIG_KEYS = {
+    NODE_ENV: 'NODE_ENV',
+    PORT: 'PORT',
+    DATABASE_URL: 'DATABASE_URL',
+    JWT_SECRET: 'JWT_SECRET',
+    JWT_EXPIRES_IN: 'JWT_EXPIRES_IN',
+};

@@ -5,6 +5,7 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
 
+
     async onModuleInit() {
         // 2. This connects to the database when the app starts
         await this.$connect();
